@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^1.6.0",
+    "chart.js": "^4.5.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
@@ -20,6 +21,10 @@
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
