@@ -28,17 +28,30 @@ const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
     e.preventDefault();
 
     if (view === "signin") {
-      if (formData.email && formData.password) {
-        alert("✅ Sign In successful! Welcome back to SmartSpend.");
+      const storedUser = JSON.parse(localStorage.getItem("smartspendUser"));
+
+      if (!storedUser) {
+        alert("⚠️ No account found. Please sign up first.");
+        setView("signup");
+        return;
+      }
+
+      if (
+        formData.email === storedUser.email &&
+        formData.password === storedUser.password
+      ) {
+        alert(`✅ Welcome back, ${storedUser.name}!`);
         if (typeof onSuccessfulSignIn === "function") {
-          onSuccessfulSignIn(formData.email);
+          onSuccessfulSignIn(storedUser.email);
         }
         onClose();
       } else {
-        alert("⚠️ Please fill in both fields.");
+        alert("❌ Invalid email or password. Try again.");
       }
     } else {
+      // Handle signup
       const { name, email, password, confirmPassword } = formData;
+
       if (!name || !email || !password || !confirmPassword) {
         alert("⚠️ Please fill in all fields.");
         return;
@@ -47,7 +60,10 @@ const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
         alert("❌ Passwords do not match.");
         return;
       }
-      alert("🎉 Account created successfully! You can now Sign In.");
+
+      const newUser = { name, email, password };
+      localStorage.setItem("smartspendUser", JSON.stringify(newUser));
+      alert("🎉 Signup successful! You can now sign in.");
       setView("signin");
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     }
