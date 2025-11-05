@@ -1,74 +1,165 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import "./Modal.css";
 
-const Modal = ({ isOpen, onClose }) => {
-  // State to toggle between 'signin' and 'signup' views
-  const [view, setView] = useState('signin'); 
+const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
+  const [view, setView] = useState("signin");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  // Reset view state whenever the modal is closed
-  React.useEffect(() => {
-    if (!isOpen) {
-      setView('signin');
-    }
-  }, [isOpen]);
+  // ✅ Close modal on ESC
+  useEffect(() => {
+    const handleEsc = (e) => e.key === "Escape" && onClose();
+    if (isOpen) document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  // Handler for form submission (prevents default behavior and shows success message)
-  const handleFormSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (view === 'signin') {
-      alert("Sign In successful! Welcome back.");
+
+    if (view === "signin") {
+      if (formData.email && formData.password) {
+        alert("✅ Sign In successful! Welcome back to SmartSpend.");
+        if (typeof onSuccessfulSignIn === "function") {
+          onSuccessfulSignIn(formData.email);
+        }
+        onClose();
+      } else {
+        alert("⚠️ Please fill in both fields.");
+      }
     } else {
-      alert("Account created successfully! Please sign in.");
-      setView('signin'); // Switch back to sign-in after successful registration
+      const { name, email, password, confirmPassword } = formData;
+      if (!name || !email || !password || !confirmPassword) {
+        alert("⚠️ Please fill in all fields.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match.");
+        return;
+      }
+      alert("🎉 Account created successfully! You can now Sign In.");
+      setView("signin");
+      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     }
-    // In a real app, you would handle Firebase/API authentication here
   };
 
   return (
-    <div id="signin-modal" 
-         className={`modal ${isOpen ? 'active' : ''}`} 
-         aria-hidden={!isOpen}
-         onClick={(e) => { if (e.target.id === 'signin-modal') onClose(); }} // Close if backdrop is clicked
-    >
-      <div className="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button className="close-btn" onClick={onClose} aria-label="Close">&times;</button>
-        
-        {/* --- Dynamic Content Based on View State --- */}
-        
-        {view === 'signin' ? (
-          <>
-            <h2 id="modal-title">Sign In to SmartSpend</h2>
-            <form onSubmit={handleFormSubmit}>
-              <input type="email" placeholder="Email Address" required />
-              <input type="password" placeholder="Password" required />
-              <button type="submit" className="btn">Sign In</button>
-            </form>
-            <p className="signup-link">
-              Don’t have an account? 
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('signup'); }}>
-                **Sign up here**
-              </a>
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 id="modal-title">Create Your SmartSpend Account</h2>
-            <form onSubmit={handleFormSubmit}>
-              <input type="text" placeholder="Full Name" required />
-              <input type="email" placeholder="Email Address" required />
-              <input type="password" placeholder="Create Password" required />
-              <button type="submit" className="btn">Sign Up</button>
-            </form>
-            <p className="signup-link">
-              Already have an account? 
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('signin'); }}>
-                **Sign in**
-              </a>
-            </p>
-          </>
-        )}
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal-content improved"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-body improved-body">
+          <h2 className="brand-title text-green">SmartSpend</h2>
 
+          {view === "signin" ? (
+            <>
+              <h3 className="modal-subtitle">
+                Welcome Back 👋 <br /> Sign in to continue your journey
+              </h3>
+
+              <form onSubmit={handleSubmit} className="modal-form">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <button type="submit" className="modal-btn improved-btn">
+                  Sign In
+                </button>
+              </form>
+
+              <p className="signup-text">
+                Don’t have an account?{" "}
+                <span
+                  className="signup-link"
+                  onClick={() => setView("signup")}
+                >
+                  Sign Up
+                </span>
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="modal-subtitle">Create Your Account 🚀</h3>
+
+              <form onSubmit={handleSubmit} className="modal-form">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="modal-input"
+                  required
+                />
+                <button type="submit" className="modal-btn improved-btn">
+                  Create Account
+                </button>
+              </form>
+
+              <p className="signup-text">
+                Already have an account?{" "}
+                <span
+                  className="signup-link"
+                  onClick={() => setView("signin")}
+                >
+                  Sign In
+                </span>
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
