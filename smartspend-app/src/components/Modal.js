@@ -30,12 +30,15 @@ const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
     if (view === "signin") {
       const storedUser = JSON.parse(localStorage.getItem("smartspendUser"));
 
+      // 🧠 If no user found → redirect to signup
       if (!storedUser) {
-        alert("⚠️ No account found. Please sign up first.");
+        alert("⚠️ No account found. Please sign up first to continue.");
         setView("signup");
+        setFormData({ name: "", email: "", password: "", confirmPassword: "" });
         return;
       }
 
+      // 🔐 If email & password match → success
       if (
         formData.email === storedUser.email &&
         formData.password === storedUser.password
@@ -46,16 +49,17 @@ const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
         }
         onClose();
       } else {
-        alert("❌ Invalid email or password. Try again.");
+        alert("❌ Incorrect email or password. Please try again.");
       }
     } else {
-      // Handle signup
+      // 📝 Handle signup
       const { name, email, password, confirmPassword } = formData;
 
       if (!name || !email || !password || !confirmPassword) {
         alert("⚠️ Please fill in all fields.");
         return;
       }
+
       if (password !== confirmPassword) {
         alert("❌ Passwords do not match.");
         return;
@@ -63,6 +67,7 @@ const Modal = ({ isOpen, onClose, onSuccessfulSignIn }) => {
 
       const newUser = { name, email, password };
       localStorage.setItem("smartspendUser", JSON.stringify(newUser));
+
       alert("🎉 Signup successful! You can now sign in.");
       setView("signin");
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
