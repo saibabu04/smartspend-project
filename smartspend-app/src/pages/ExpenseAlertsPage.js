@@ -1,67 +1,123 @@
-import React, { useEffect } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const ExpenseAlertsPage = () => {
+  const [alerts, setAlerts] = useState({
+    budgetLimit: true,
+    largeTransaction: true,
+    email: false,
+    sms: false,
+  });
+
   useEffect(() => {
-    document.title = 'SmartSpend – Expense Alerts';
+    document.title = "SmartSpend – Expense Alerts";
   }, []);
+
+  const handleToggle = (key) => {
+    setAlerts((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <>
       <Header />
-      <main className="content py-10 px-4 sm:px-8 bg-gradient-to-br from-gray-50 to-green-50 min-h-screen">
-        <section className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 transition-transform hover:scale-[1.01] duration-300">
-          <h1 className="text-4xl font-bold text-green-700 mb-4 flex items-center gap-2">
-            Expense Alerts <span className="text-3xl">🔔</span>
+      <main className="bg-gray-50 min-h-screen py-10 px-6">
+        <section className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-10 text-center">
+          {/* Heading */}
+          <h1 className="text-4xl font-bold text-green-700 mb-3 flex justify-center items-center gap-2">
+            Expense Alerts <span role="img" aria-label="bell">🔔</span>
           </h1>
-          <p className="text-gray-600 mb-6 text-lg">
-            Stay informed and avoid overspending with real-time notifications based on your set budgets and thresholds.
+          <p className="text-gray-600 mb-8 text-lg">
+            Stay informed and avoid overspending with real-time notifications based on your
+            budgets and thresholds.
           </p>
 
           {/* Notification Settings */}
-          <div className="bg-green-50 p-6 rounded-xl shadow-inner mb-8">
-            <h2 className="text-2xl font-semibold text-green-800 mb-2">Notification Settings</h2>
-            <p className="text-gray-600 mb-4">
-              Customize when and how you want to receive alerts. You can choose notification types, frequency, and budget limits.
+          <div className="border-t border-b py-8 mb-8">
+            <h2 className="text-2xl font-semibold text-green-700 mb-3">
+              Notification Settings
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Customize when and how you want to receive alerts. Choose notification
+              types, frequency, and limits.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition">
-                <span className="font-medium text-gray-700">Budget Limit Alerts</span>
-                <input type="checkbox" defaultChecked className="accent-green-600 w-5 h-5" />
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition">
-                <span className="font-medium text-gray-700">Large Transaction Alerts</span>
-                <input type="checkbox" defaultChecked className="accent-green-600 w-5 h-5" />
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition">
-                <span className="font-medium text-gray-700">Email Notifications</span>
-                <input type="checkbox" className="accent-green-600 w-5 h-5" />
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition">
-                <span className="font-medium text-gray-700">SMS Notifications</span>
-                <input type="checkbox" className="accent-green-600 w-5 h-5" />
-              </div>
+
+            <div className="grid md:grid-cols-2 gap-4 justify-center max-w-md mx-auto text-left">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={alerts.budgetLimit}
+                  onChange={() => handleToggle("budgetLimit")}
+                  className="w-5 h-5 accent-green-600"
+                />
+                <span className="text-gray-800 font-medium">Budget Limit Alerts</span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={alerts.largeTransaction}
+                  onChange={() => handleToggle("largeTransaction")}
+                  className="w-5 h-5 accent-green-600"
+                />
+                <span className="text-gray-800 font-medium">
+                  Large Transaction Alerts
+                </span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={alerts.email}
+                  onChange={() => handleToggle("email")}
+                  className="w-5 h-5 accent-green-600"
+                />
+                <span className="text-gray-800 font-medium">Email Notifications</span>
+              </label>
+
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={alerts.sms}
+                  onChange={() => handleToggle("sms")}
+                  className="w-5 h-5 accent-green-600"
+                />
+                <span className="text-gray-800 font-medium">SMS Notifications</span>
+              </label>
             </div>
           </div>
 
           {/* Recent Alerts Section */}
           <div>
-            <h2 className="text-2xl font-semibold text-green-800 mb-4">Recent Alerts</h2>
-            <ul className="space-y-3">
-              <li className="bg-green-50 p-4 rounded-lg shadow-sm flex items-center justify-between hover:bg-green-100 transition">
-                <span className="text-gray-800">⚠️ Food budget reached <strong>90%</strong></span>
-                <span className="text-sm text-gray-500">Yesterday</span>
-              </li>
-              <li className="bg-green-50 p-4 rounded-lg shadow-sm flex items-center justify-between hover:bg-green-100 transition">
-                <span className="text-gray-800">💳 Single transaction over <strong>$500</strong></span>
-                <span className="text-sm text-gray-500">2 days ago</span>
-              </li>
-              <li className="bg-green-50 p-4 rounded-lg shadow-sm flex items-center justify-between hover:bg-green-100 transition">
-                <span className="text-gray-800">✅ All alerts are active</span>
-                <span className="text-sm text-gray-500">Today</span>
-              </li>
-            </ul>
+            <h2 className="text-2xl font-semibold text-green-700 mb-4">
+              Recent Alerts
+            </h2>
+
+            <div className="space-y-3 text-left max-w-lg mx-auto">
+              <div className="flex items-start gap-2">
+                <span className="text-yellow-500 text-xl">⚠️</span>
+                <p className="text-gray-800">
+                  <strong>Food budget</strong> reached <strong>90%</strong> —{" "}
+                  <span className="text-gray-500">Yesterday</span>
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="text-blue-500 text-xl">💳</span>
+                <p className="text-gray-800">
+                  Single transaction over <strong>₹5000</strong> —{" "}
+                  <span className="text-gray-500">2 days ago</span>
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="text-green-600 text-xl">✅</span>
+                <p className="text-gray-800">
+                  All alerts are <strong>active</strong> —{" "}
+                  <span className="text-gray-500">Today</span>
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </main>
