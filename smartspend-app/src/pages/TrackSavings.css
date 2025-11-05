@@ -1,0 +1,58 @@
+.track-savings-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f8fdfb;
+  color: #222;
+}
+
+.track-savings-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f9d58;
+}
+
+.track-savings-subtitle {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  color: #555;
+}
+
+.user-greeting {
+  margin-top: 2rem;
+  background: #e9f8ef;
+  border: 1px solid #c6e7d1;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.welcome-message {
+  color: #0b8043;
+  font-size: 1.3rem;
+}
+
+.savings-details {
+  margin-top: 1rem;
+  text-align: left;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.savings-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.savings-details li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.signin-reminder {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: #b71c1c;
+  background: #fdecea;
+  padding: 1rem;
+  border-radius: 8px;
+  display: inline-block;
+}
